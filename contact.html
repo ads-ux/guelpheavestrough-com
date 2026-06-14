@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | Guelph Eavestrough</title>
+  <meta name="description" content="Contact Guelph Eavestrough for a free quote. Call 226-790-2968 or fill out our form.">
+  <link rel="canonical" href="https://guelpheavestrough.com/contact.html">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <nav>
+    <div class="nav-brand"><a href="/">Guelph Eavestrough</a></div>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/#services">Services</a></li>
+      <li><a href="/blog.html">Blog</a></li>
+      <li><a href="/contact.html" class="active">Contact</a></li>
+      <li><a href="/contact.html" class="btn-nav">Free Quote</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
+  </nav>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <h1>Contact Guelph Eavestrough</h1>
+    <p>Get your free, no-obligation quote today. We respond within 24 hours.</p>
+  </div>
+</section>
+
+<section class="section-contact">
+  <div class="container contact-layout">
+    <div class="contact-info">
+      <h2>Get in Touch</h2>
+      <div class="contact-detail">
+        <span>📞</span>
+        <div>
+          <strong>Phone</strong>
+          <a href="tel:226-790-2968">226-790-2968</a>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <span>✉️</span>
+        <div>
+          <strong>Email</strong>
+          <a href="mailto:hello@guelpheavestrough.com">hello@guelpheavestrough.com</a>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <span>📍</span>
+        <div>
+          <strong>Service Area</strong>
+          <p>Guelph, Fergus, Elora, Rockwood, Cambridge and all of Wellington County</p>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <span>🕐</span>
+        <div>
+          <strong>Hours</strong>
+          <p>Mon–Fri: 7am–7pm<br>Sat: 8am–5pm<br>Emergency service available</p>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form-wrap">
+      <h2>Request a Free Quote</h2>
+      <form class="contact-form" name="contact" method="POST" netlify netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="contact">
+        <p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
+        <div class="form-row">
+          <label>Name <input type="text" name="name" required placeholder="Your full name"></label>
+          <label>Phone <input type="tel" name="phone" placeholder="Best phone number"></label>
+        </div>
+        <div class="form-row">
+          <label>Email <input type="email" name="email" required placeholder="Your email address"></label>
+          <label>Address <input type="text" name="address" placeholder="Your address in Guelph"></label>
+        </div>
+        <label>Service Needed
+          <select name="service">
+            <option value="">Select a service...</option>
+            <option value="Eavestrough Installation">Eavestrough Installation</option>
+            <option value="Eavestrough Cleaning">Eavestrough Cleaning</option>
+            <option value="Eavestrough Repair">Eavestrough Repair</option>
+            <option value="Leaf Guards & Covers">Leaf Guards & Covers</option>
+            <option value="Downspout Service">Downspout Service</option>
+            <option value="Emergency Service">Emergency Service</option>
+          </select>
+        </label>
+        <label>Message
+          <textarea name="message" rows="6" placeholder="Describe your project or issue..."></textarea>
+        </label>
+        <button type="submit" class="btn-primary">Send My Request</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-bottom">
+      <p>&copy; 2026 Guelph Eavestrough. All rights reserved. | <a href="/privacy.html">Privacy Policy</a> | Built by <a href="https://overhauled.ai">Overhauled.ai</a></p>
+    </div>
+  </div>
+</footer>
+<script>function toggleNav() { document.querySelector('.nav-links').classList.toggle('open'); }</script>
+</body>
+</html>

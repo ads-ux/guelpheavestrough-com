@@ -1,27 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://guelpheavestrough.com/</loc>
-    <lastmod>2026-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://guelpheavestrough.com/contact.html</loc>
-    <lastmod>2026-06-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://guelpheavestrough.com/blog.html</loc>
-    <lastmod>2026-06-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://guelpheavestrough.com/privacy.html</loc>
-    <lastmod>2026-06-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://guelpheavestrough.com/</loc></url>
+  <url><loc>https://guelpheavestrough.com/privacy</loc></url>
+  <url><loc>https://guelpheavestrough.com/how-often-clean-eavestroughs-guelph</loc></url>
+  <url><loc>https://guelpheavestrough.com/eavestrough-installation-cost-guelph</loc></url>
+  <url><loc>https://guelpheavestrough.com/contact</loc></url>
+  <url><loc>https://guelpheavestrough.com/blog</loc></url>
+  <url><loc>https://guelpheavestrough.com/eavestrough-size-guelph</loc></url>
 </urlset>

@@ -19,3 +19,16 @@ from = "https://guelpheavestrough-com.netlify.app/*"
 to = "https://guelpheavestrough.com/:splat"
 status = 301
 force = true
+
+# Consolidate duplicate domains onto the canonical guelpheavestrough.com
+[[redirects]]
+from = "https://guelpheavestrough.ca/*"
+to = "https://guelpheavestrough.com/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://guelpheavestroughs.com/*"
+to = "https://guelpheavestrough.com/:splat"
+status = 301
+force = true

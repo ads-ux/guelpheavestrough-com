@@ -91,13 +91,13 @@ src="https://www.facebook.com/tr?id=2194207214734752&ev=PageView&noscript=1"/></
         <span>🕐</span>
         <div>
           <strong>Hours</strong>
-          <p>Mon–Fri: 7am–7pm<br>Sat: 8am–5pm<br>Emergency service available</p>
+          <p>Mon–Fri: 8am–6pm<br>Sat: 9am–2pm<br>Sun: Closed</p>
         </div>
       </div>
     </div>
     <div class="contact-form-wrap">
       <h2>Request a Free Quote</h2>
-      <form class='contact-form' method='POST' name='contact'>
+      <form class='contact-form' method='POST' name='contact' enctype="multipart/form-data" data-netlify="true">
         <input type="hidden" name="form-name" value="contact">
         <p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
         <div class="form-row">
@@ -108,7 +108,7 @@ src="https://www.facebook.com/tr?id=2194207214734752&ev=PageView&noscript=1"/></
         <label>What do you need?
           <textarea name="message" rows="6" placeholder="Describe your project or issue..."></textarea>
         </label>
-        <button type="submit" class="btn-primary">Send My Request</button>
+        <label>Photos or Video (optional)</label><input type="file" name="photos" accept="image/*,video/*" multiple><button type="submit" class="btn-primary">Send My Request</button>
       </form>
     </div>
   </div>

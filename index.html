@@ -392,17 +392,17 @@ src="https://www.facebook.com/tr?id=2194207214734752&ev=PageView&noscript=1"/></
   <div class="container">
     <h2>Get a Free Quote</h2>
     <p>Contact us today for a free, no-obligation quote for eavestrough services in Guelph.</p>
-    <form class='contact-form' method='POST' name='contact'>
+    <form class='contact-form' method='POST' name='contact' enctype="multipart/form-data" data-netlify="true">
       <input type="hidden" name="form-name" value="contact">
       <p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
       <div class="form-row">
         <label>Name <input type="text" name="name" required placeholder="Your name"></label>
-        <label>Phone <input type="tel" name="phone" required placeholder="Your phone number"></label>
+        <label>Phone <input type="tel" name="phone" required placeholder="Your phone number"><label>Email</label><input type="email" name="email" placeholder="jane@example.com"></label>
       </div>
       <label>What do you need?
         <textarea name="message" rows="5" placeholder="Tell us about your project..."></textarea>
       </label>
-      <button type="submit" class="btn-primary">Send My Request</button>
+      <label>Photos or Video (optional)</label><input type="file" name="photos" accept="image/*,video/*" multiple><button type="submit" class="btn-primary">Send My Request</button>
     </form>
   </div>
 </section>

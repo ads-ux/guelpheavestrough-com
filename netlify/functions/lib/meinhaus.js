@@ -22,16 +22,16 @@ const MEINHAUS_ENDPOINT = 'https://meinhaus.ca/lead-gen/leads';
 // ---------------------------------------------------------------------------
 const SITES = {
   // ---- PAID: $500 + HST / month, exclusive, since Sep 2026 ----
-  'guelpheavestrough.com':        { enabled: true,  trade: 'Eavestrough',            label: 'Guelph Eavestrough' },
-  'Guelph Eavestrough':           { enabled: true,  trade: 'Eavestrough',            label: 'Guelph Eavestrough' },
+  'guelpheavestrough.com':        { enabled: true,  trade: 'Eavestrough',            label: 'Guelph Eavestrough', domain: 'guelpheavestrough.com' },
+  'Guelph Eavestrough':           { enabled: true,  trade: 'Eavestrough',            label: 'Guelph Eavestrough', domain: 'guelpheavestrough.com' },
 
   // ---- NOT YET SOLD — mapped so enabling is a one-word change ----
-  'guelphbasementwaterproofing.com': { enabled: false, trade: 'Basement Waterproofing', label: 'Guelph Basement Waterproofing' },
-  'Guelph Basement Waterproofing':   { enabled: false, trade: 'Basement Waterproofing', label: 'Guelph Basement Waterproofing' },
-  'guelphfoundationrepair.com':      { enabled: false, trade: 'Foundation Repair',      label: 'Guelph Foundation Repair' },
-  'Guelph Foundation Repair':        { enabled: false, trade: 'Foundation Repair',      label: 'Guelph Foundation Repair' },
-  'guelphplumbers.ca':               { enabled: false, trade: 'Plumbing',               label: 'Guelph Plumbers' },
-  'Guelph Plumbers':                 { enabled: false, trade: 'Plumbing',               label: 'Guelph Plumbers' },
+  'guelphbasementwaterproofing.com': { enabled: false, trade: 'Basement Waterproofing', label: 'Guelph Basement Waterproofing', domain: 'guelphbasementwaterproofing.com' },
+  'Guelph Basement Waterproofing':   { enabled: false, trade: 'Basement Waterproofing', label: 'Guelph Basement Waterproofing', domain: 'guelphbasementwaterproofing.com' },
+  'guelphfoundationrepair.com':      { enabled: false, trade: 'Foundation Repair',      label: 'Guelph Foundation Repair', domain: 'guelphfoundationrepair.com' },
+  'Guelph Foundation Repair':        { enabled: false, trade: 'Foundation Repair',      label: 'Guelph Foundation Repair', domain: 'guelphfoundationrepair.com' },
+  'guelphplumbers.ca':               { enabled: false, trade: 'Plumbing',               label: 'Guelph Plumbers', domain: 'guelphplumbers.ca' },
+  'Guelph Plumbers':                 { enabled: false, trade: 'Plumbing',               label: 'Guelph Plumbers', domain: 'guelphplumbers.ca' },
 };
 
 function siteFor(key) {
@@ -72,7 +72,7 @@ function buildPayload(lead, site) {
     .filter(([, v]) => v !== undefined && v !== null && String(v).trim() !== '')
     .map(([k, v]) => `${k}: ${String(v).trim()}`);
   if (extraLines.length) lines.push('', ...extraLines);
-  lines.push('', `Source site: https://${site.key.includes('.') ? site.key : slug(site.label) + '.com'}`);
+  lines.push('', `Source site: https://${site.domain || site.key}`);
 
   const body = {
     message: clip(lines.join('\n'), 2000),

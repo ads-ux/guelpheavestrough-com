@@ -25,6 +25,10 @@ const SITES = {
   'guelpheavestrough.com':        { enabled: true,  trade: 'Eavestrough',            label: 'Guelph Eavestrough', domain: 'guelpheavestrough.com' },
   'Guelph Eavestrough':           { enabled: true,  trade: 'Eavestrough',            label: 'Guelph Eavestrough', domain: 'guelpheavestrough.com' },
 
+  // ---- FREE TEST → $750/mo offer sent Sep 2026. ON since 2026-09-20 (Mark) ----
+  'guelphdrywalling.com':         { enabled: true,  trade: 'Drywalling',             label: 'Guelph Drywalling', domain: 'guelphdrywalling.com' },
+  'Guelph Drywalling':            { enabled: true,  trade: 'Drywalling',             label: 'Guelph Drywalling', domain: 'guelphdrywalling.com' },
+
   // ---- NOT YET SOLD — mapped so enabling is a one-word change ----
   'guelphbasementwaterproofing.com': { enabled: false, trade: 'Basement Waterproofing', label: 'Guelph Basement Waterproofing', domain: 'guelphbasementwaterproofing.com' },
   'Guelph Basement Waterproofing':   { enabled: false, trade: 'Basement Waterproofing', label: 'Guelph Basement Waterproofing', domain: 'guelphbasementwaterproofing.com' },

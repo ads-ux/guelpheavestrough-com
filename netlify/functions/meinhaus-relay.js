@@ -27,6 +27,26 @@ exports.handler = async (event) => {
   let lead;
   try { lead = JSON.parse(event.body || '{}'); } catch (e) { return resp(400, { error: 'bad json' }); }
 
+  // A Netlify Forms "outgoing webhook" notification from another WPL site posts the raw
+  // submission object here (has .data + .site_url). Normalise it so satellite sites need
+  // no functions of their own — just a notification hook pointing at this URL.
+  if (lead && lead.data && (lead.site_url || lead.form_name) && !lead.site) {
+    const d = lead.data || {};
+    const host = String(lead.site_url || '').replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '');
+    const msg = String(d.message || d.details || d.description || '').trim();
+    lead = {
+      site: host,
+      source: `web form (${lead.form_name || 'contact'})`,
+      name: d.name || [d.first_name, d.last_name].filter(Boolean).join(' '),
+      email: d.email,
+      phone: d.phone || d.tel,
+      address: d.address || d.property_address,
+      message: msg,
+      extra: { 'Service requested': d.service, 'Photos/video': fileUrls(d.photos), 'Submitted': lead.created_at, 'Page': lead.site_url ? `${lead.site_url}/` : undefined },
+      ref: `wpl-${host.replace(/\W+/g, '-')}-form-${lead.id || lead.number || Date.now()}`,
+    };
+  }
+
   const site = siteFor(lead.site);
   if (!site) return resp(200, { ok: false, skipped: 'site-not-mapped', site: lead.site });
 
@@ -39,6 +59,14 @@ exports.handler = async (event) => {
   if (!dryRun) await auditEmail(lead, result);
   return resp(200, { ok: result.ok, skipped: result.skipped || null, status: result.status || null, leadId: result.json && result.json.lead ? result.json.lead.id : null, isNewLead: result.json ? result.json.isNewLead : null, dryRun: !!dryRun, body: dryRun ? result.body : undefined });
 };
+
+function fileUrls(v) {
+  if (!v) return undefined;
+  if (typeof v === 'string') return v;
+  if (Array.isArray(v)) return v.map(x => (x && (x.url || x))).filter(Boolean).join(' ');
+  if (v.url) return v.url;
+  return undefined;
+}
 
 function resp(statusCode, obj) {
   return { statusCode, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(obj) };

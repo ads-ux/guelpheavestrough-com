@@ -29,9 +29,10 @@ const SITES = {
   'guelphdrywalling.com':         { enabled: true,  trade: 'Drywalling',             label: 'Guelph Drywalling', domain: 'guelphdrywalling.com' },
   'Guelph Drywalling':            { enabled: true,  trade: 'Drywalling',             label: 'Guelph Drywalling', domain: 'guelphdrywalling.com' },
 
+  // ---- ON since 2026-09-22 (Mark): Guelph Basement Waterproofing ----
   // ---- NOT YET SOLD — mapped so enabling is a one-word change ----
-  'guelphbasementwaterproofing.com': { enabled: false, trade: 'Basement Waterproofing', label: 'Guelph Basement Waterproofing', domain: 'guelphbasementwaterproofing.com' },
-  'Guelph Basement Waterproofing':   { enabled: false, trade: 'Basement Waterproofing', label: 'Guelph Basement Waterproofing', domain: 'guelphbasementwaterproofing.com' },
+  'guelphbasementwaterproofing.com': { enabled: true , trade: 'Basement Waterproofing', label: 'Guelph Basement Waterproofing', domain: 'guelphbasementwaterproofing.com' },
+  'Guelph Basement Waterproofing':   { enabled: true , trade: 'Basement Waterproofing', label: 'Guelph Basement Waterproofing', domain: 'guelphbasementwaterproofing.com' },
   'guelphfoundationrepair.com':      { enabled: false, trade: 'Foundation Repair',      label: 'Guelph Foundation Repair', domain: 'guelphfoundationrepair.com' },
   'Guelph Foundation Repair':        { enabled: false, trade: 'Foundation Repair',      label: 'Guelph Foundation Repair', domain: 'guelphfoundationrepair.com' },
   'guelphplumbers.ca':               { enabled: false, trade: 'Plumbing',               label: 'Guelph Plumbers', domain: 'guelphplumbers.ca' },

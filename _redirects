@@ -1,0 +1,10 @@
+
+# 2026-09-23 — canonicalise .html duplicates to clean URLs
+/blog.html   /blog   301!
+/contact.html   /contact   301!
+/eavestrough-installation-cost-guelph.html   /eavestrough-installation-cost-guelph   301!
+/eavestrough-installation-guelph.html   /eavestrough-installation-guelph   301!
+/eavestrough-repair-guelph.html   /eavestrough-repair-guelph   301!
+/eavestrough-size-guelph.html   /eavestrough-size-guelph   301!
+/how-often-clean-eavestroughs-guelph.html   /how-often-clean-eavestroughs-guelph   301!
+/privacy.html   /privacy   301!

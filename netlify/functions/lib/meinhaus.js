@@ -33,6 +33,10 @@ const SITES = {
   // ---- NOT YET SOLD — mapped so enabling is a one-word change ----
   'guelphbasementwaterproofing.com': { enabled: true , trade: 'Basement Waterproofing', label: 'Guelph Basement Waterproofing', domain: 'guelphbasementwaterproofing.com' },
   'Guelph Basement Waterproofing':   { enabled: true , trade: 'Basement Waterproofing', label: 'Guelph Basement Waterproofing', domain: 'guelphbasementwaterproofing.com' },
+  // ---- ON since 2026-09-30 (Mark): Guelph Electrical — Brad/Electrical Measures withdrew, site handed to Meinhaus ----
+  'guelphelectrical.com':         { enabled: true,  trade: 'Electrical',             label: 'Guelph Electrical', domain: 'guelphelectrical.com' },
+  'Guelph Electrical':            { enabled: true,  trade: 'Electrical',             label: 'Guelph Electrical', domain: 'guelphelectrical.com' },
+
   'guelphfoundationrepair.com':      { enabled: false, trade: 'Foundation Repair',      label: 'Guelph Foundation Repair', domain: 'guelphfoundationrepair.com' },
   'Guelph Foundation Repair':        { enabled: false, trade: 'Foundation Repair',      label: 'Guelph Foundation Repair', domain: 'guelphfoundationrepair.com' },
   'guelphplumbers.ca':               { enabled: false, trade: 'Plumbing',               label: 'Guelph Plumbers', domain: 'guelphplumbers.ca' },

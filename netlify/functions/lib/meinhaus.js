@@ -37,6 +37,10 @@ const SITES = {
   'guelphelectrical.com':         { enabled: true,  trade: 'Electrical',             label: 'Guelph Electrical', domain: 'guelphelectrical.com' },
   'Guelph Electrical':            { enabled: true,  trade: 'Electrical',             label: 'Guelph Electrical', domain: 'guelphelectrical.com' },
 
+  // ---- ON since 2026-10-01 (Mark): Guelph Tree Service — site handed to Meinhaus ----
+  'guelphtreeservice.com':        { enabled: true,  trade: 'Tree Service',           label: 'Guelph Tree Service', domain: 'guelphtreeservice.com' },
+  'Guelph Tree Service':          { enabled: true,  trade: 'Tree Service',           label: 'Guelph Tree Service', domain: 'guelphtreeservice.com' },
+
   'guelphfoundationrepair.com':      { enabled: false, trade: 'Foundation Repair',      label: 'Guelph Foundation Repair', domain: 'guelphfoundationrepair.com' },
   'Guelph Foundation Repair':        { enabled: false, trade: 'Foundation Repair',      label: 'Guelph Foundation Repair', domain: 'guelphfoundationrepair.com' },
   'guelphplumbers.ca':               { enabled: false, trade: 'Plumbing',               label: 'Guelph Plumbers', domain: 'guelphplumbers.ca' },

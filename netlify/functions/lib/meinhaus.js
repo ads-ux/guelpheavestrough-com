@@ -47,6 +47,9 @@ const SITES = {
   'Guelph Interlocking':               { enabled: true,  trade: 'Interlocking',              label: 'Guelph Interlocking', domain: 'guelphinterlocking.com' },
   'guelphroofers.com':                 { enabled: true,  trade: 'Roofing',                   label: 'Guelph Roofers', domain: 'guelphroofers.com' },
   'Guelph Roofers':                    { enabled: true,  trade: 'Roofing',                   label: 'Guelph Roofers', domain: 'guelphroofers.com' },
+  // ---- ON since 2026-10-08 (Mark): first Kitchener-Waterloo site handed to Meinhaus ----
+  'kitchenerroofing.ca':              { enabled: true,  trade: 'Roofing',                   label: 'Kitchener Roofing', domain: 'kitchenerroofing.ca' },
+  'Kitchener Roofing':                 { enabled: true,  trade: 'Roofing',                   label: 'Kitchener Roofing', domain: 'kitchenerroofing.ca' },
   'guelphexcavation.com':              { enabled: true,  trade: 'Excavation',                label: 'Guelph Excavation', domain: 'guelphexcavation.com' },
   'Guelph Excavation':                 { enabled: true,  trade: 'Excavation',                label: 'Guelph Excavation', domain: 'guelphexcavation.com' },
   'guelphairconditioning.com':         { enabled: true,  trade: 'Air Conditioning & HVAC',   label: 'Guelph Air Conditioning', domain: 'guelphairconditioning.com' },

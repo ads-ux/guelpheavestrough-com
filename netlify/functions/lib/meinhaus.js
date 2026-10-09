@@ -50,6 +50,8 @@ const SITES = {
   // ---- ON since 2026-10-08 (Mark): first Kitchener-Waterloo site handed to Meinhaus ----
   'kitchenerroofing.ca':              { enabled: true,  trade: 'Roofing',                   label: 'Kitchener Roofing', domain: 'kitchenerroofing.ca' },
   'Kitchener Roofing':                 { enabled: true,  trade: 'Roofing',                   label: 'Kitchener Roofing', domain: 'kitchenerroofing.ca' },
+  'kwcpolymericsand.com':             { enabled: true,  trade: 'Interlocking',              label: 'KWC Interlock & Polymeric Sand', domain: 'kwcpolymericsand.com' },
+  'KWC Interlock & Polymeric Sand':   { enabled: true,  trade: 'Interlocking',              label: 'KWC Interlock & Polymeric Sand', domain: 'kwcpolymericsand.com' },
   'guelphexcavation.com':              { enabled: true,  trade: 'Excavation',                label: 'Guelph Excavation', domain: 'guelphexcavation.com' },
   'Guelph Excavation':                 { enabled: true,  trade: 'Excavation',                label: 'Guelph Excavation', domain: 'guelphexcavation.com' },
   'guelphairconditioning.com':         { enabled: true,  trade: 'Air Conditioning & HVAC',   label: 'Guelph Air Conditioning', domain: 'guelphairconditioning.com' },

@@ -47,6 +47,18 @@ const SITES = {
   // ---- ON since 2026-10-14 (Mark): Mo cut from guelphgaragedoor.com, site handed to Meinhaus ----
   'guelphgaragedoor.com':              { enabled: true,  trade: 'Garage Door',                label: 'Guelph Garage Door', domain: 'guelphgaragedoor.com' },
   'Guelph Garage Door':                { enabled: true,  trade: 'Garage Door',                label: 'Guelph Garage Door', domain: 'guelphgaragedoor.com' },
+  // ---- ON since 2026-10-14 (Mark): guelphhydrovac.com handed to Meinhaus (unpartnered since Kyle Robinson came off 2026-09-22) ----
+  'guelphhydrovac.com':                { enabled: true,  trade: 'Hydrovac Excavation',       label: 'Guelph Hydrovac', domain: 'guelphhydrovac.com' },
+  'Guelph Hydrovac':                   { enabled: true,  trade: 'Hydrovac Excavation',       label: 'Guelph Hydrovac', domain: 'guelphhydrovac.com' },
+  // ---- ON since 2026-10-14 (Mark): fencing handed to Meinhaus across all four cities (Mike/Zack passed 2026-10-14) ----
+  'guelphfencing.com':                 { enabled: true,  trade: 'Fencing',                   label: 'Guelph Fencing', domain: 'guelphfencing.com' },
+  'Guelph Fencing':                    { enabled: true,  trade: 'Fencing',                   label: 'Guelph Fencing', domain: 'guelphfencing.com' },
+  'kitchenerfencing.ca':               { enabled: true,  trade: 'Fencing',                   label: 'Kitchener Fencing', domain: 'kitchenerfencing.ca' },
+  'Kitchener Fencing':                 { enabled: true,  trade: 'Fencing',                   label: 'Kitchener Fencing', domain: 'kitchenerfencing.ca' },
+  'waterloofencing.ca':                { enabled: true,  trade: 'Fencing',                   label: 'Waterloo Fencing', domain: 'waterloofencing.ca' },
+  'Waterloo Fencing':                  { enabled: true,  trade: 'Fencing',                   label: 'Waterloo Fencing', domain: 'waterloofencing.ca' },
+  'cambridgefencing.ca':               { enabled: true,  trade: 'Fencing',                   label: 'Cambridge Fencing', domain: 'cambridgefencing.ca' },
+  'Cambridge Fencing':                 { enabled: true,  trade: 'Fencing',                   label: 'Cambridge Fencing', domain: 'cambridgefencing.ca' },
   'Guelph Interlocking':               { enabled: true,  trade: 'Interlocking',              label: 'Guelph Interlocking', domain: 'guelphinterlocking.com' },
   'guelphroofers.com':                 { enabled: true,  trade: 'Roofing',                   label: 'Guelph Roofers', domain: 'guelphroofers.com' },
   'Guelph Roofers':                    { enabled: true,  trade: 'Roofing',                   label: 'Guelph Roofers', domain: 'guelphroofers.com' },

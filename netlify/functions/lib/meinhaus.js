@@ -44,6 +44,9 @@ const SITES = {
 
   // ---- ON since 2026-10-08 (Mark): handover of the unpartnered Guelph inventory ----
   'guelphinterlocking.com':            { enabled: true,  trade: 'Interlocking',              label: 'Guelph Interlocking', domain: 'guelphinterlocking.com' },
+  // ---- ON since 2026-10-14 (Mark): Mo cut from guelphgaragedoor.com, site handed to Meinhaus ----
+  'guelphgaragedoor.com':              { enabled: true,  trade: 'Garage Door',                label: 'Guelph Garage Door', domain: 'guelphgaragedoor.com' },
+  'Guelph Garage Door':                { enabled: true,  trade: 'Garage Door',                label: 'Guelph Garage Door', domain: 'guelphgaragedoor.com' },
   'Guelph Interlocking':               { enabled: true,  trade: 'Interlocking',              label: 'Guelph Interlocking', domain: 'guelphinterlocking.com' },
   'guelphroofers.com':                 { enabled: true,  trade: 'Roofing',                   label: 'Guelph Roofers', domain: 'guelphroofers.com' },
   'Guelph Roofers':                    { enabled: true,  trade: 'Roofing',                   label: 'Guelph Roofers', domain: 'guelphroofers.com' },

@@ -52,6 +52,8 @@ const SITES = {
   'Kitchener Roofing':                 { enabled: true,  trade: 'Roofing',                   label: 'Kitchener Roofing', domain: 'kitchenerroofing.ca' },
   'kwcpolymericsand.com':             { enabled: true,  trade: 'Interlocking',              label: 'KWC Interlock & Polymeric Sand', domain: 'kwcpolymericsand.com' },
   'KWC Interlock & Polymeric Sand':   { enabled: true,  trade: 'Interlocking',              label: 'KWC Interlock & Polymeric Sand', domain: 'kwcpolymericsand.com' },
+  'cambridgekitchenrenovation.ca':    { enabled: true,  trade: 'Kitchen Renovation',        label: 'Cambridge Kitchen Renovation', domain: 'cambridgekitchenrenovation.ca' },
+  'Cambridge Kitchen Renovation':     { enabled: true,  trade: 'Kitchen Renovation',        label: 'Cambridge Kitchen Renovation', domain: 'cambridgekitchenrenovation.ca' },
   'guelphexcavation.com':              { enabled: true,  trade: 'Excavation',                label: 'Guelph Excavation', domain: 'guelphexcavation.com' },
   'Guelph Excavation':                 { enabled: true,  trade: 'Excavation',                label: 'Guelph Excavation', domain: 'guelphexcavation.com' },
   'guelphairconditioning.com':         { enabled: true,  trade: 'Air Conditioning & HVAC',   label: 'Guelph Air Conditioning', domain: 'guelphairconditioning.com' },

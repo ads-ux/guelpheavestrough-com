@@ -50,6 +50,9 @@ const SITES = {
   // ---- ON since 2026-10-14 (Mark): guelphhydrovac.com handed to Meinhaus (unpartnered since Kyle Robinson came off 2026-09-22) ----
   'guelphhydrovac.com':                { enabled: true,  trade: 'Hydrovac Excavation',       label: 'Guelph Hydrovac', domain: 'guelphhydrovac.com' },
   'Guelph Hydrovac':                   { enabled: true,  trade: 'Hydrovac Excavation',       label: 'Guelph Hydrovac', domain: 'guelphhydrovac.com' },
+  // ---- ON since 2026-10-17 (Mark): waterlooheating.ca handed to Meinhaus (unpartnered, voicemail-only) ----
+  'waterlooheating.ca':                { enabled: true,  trade: 'Heating & HVAC',             label: 'Waterloo Heating', domain: 'waterlooheating.ca' },
+  'Waterloo Heating':                  { enabled: true,  trade: 'Heating & HVAC',             label: 'Waterloo Heating', domain: 'waterlooheating.ca' },
   // ---- ON since 2026-10-14 (Mark): fencing handed to Meinhaus across all four cities (Mike/Zack passed 2026-10-14) ----
   'guelphfencing.com':                 { enabled: true,  trade: 'Fencing',                   label: 'Guelph Fencing', domain: 'guelphfencing.com' },
   'Guelph Fencing':                    { enabled: true,  trade: 'Fencing',                   label: 'Guelph Fencing', domain: 'guelphfencing.com' },

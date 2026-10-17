@@ -65,6 +65,13 @@ const SITES = {
   'KW Gas Fitter':                     { enabled: true,  trade: 'Gas Fitting',                label: 'KW Gas Fitter', domain: 'kwgasfitter.com' },
   'kwapplianceinstallation.com':       { enabled: true,  trade: 'Appliance Installation',     label: 'KW Appliance Installation', domain: 'kwapplianceinstallation.com' },
   'KW Appliance Installation':         { enabled: true,  trade: 'Appliance Installation',     label: 'KW Appliance Installation', domain: 'kwapplianceinstallation.com' },
+  // ---- ON since 2026-10-17 (Mark): the three painting sites wired - painting is named in the paid 60-lead block ----
+  'guelphpaintingco.com':              { enabled: true,  trade: 'Painting',                   label: 'Guelph Painting Co.', domain: 'guelphpaintingco.com' },
+  'Guelph Painting Co.':               { enabled: true,  trade: 'Painting',                   label: 'Guelph Painting Co.', domain: 'guelphpaintingco.com' },
+  'kitchenerhousepainters.com':        { enabled: true,  trade: 'Painting',                   label: 'Kitchener House Painters', domain: 'kitchenerhousepainters.com' },
+  'Kitchener House Painters':          { enabled: true,  trade: 'Painting',                   label: 'Kitchener House Painters', domain: 'kitchenerhousepainters.com' },
+  'waterloopainters.ca':               { enabled: true,  trade: 'Painting',                   label: 'Waterloo Painters', domain: 'waterloopainters.ca' },
+  'Waterloo Painters':                 { enabled: true,  trade: 'Painting',                   label: 'Waterloo Painters', domain: 'waterloopainters.ca' },
   // ---- ON since 2026-10-14 (Mark): fencing handed to Meinhaus across all four cities (Mike/Zack passed 2026-10-14) ----
   'guelphfencing.com':                 { enabled: true,  trade: 'Fencing',                   label: 'Guelph Fencing', domain: 'guelphfencing.com' },
   'Guelph Fencing':                    { enabled: true,  trade: 'Fencing',                   label: 'Guelph Fencing', domain: 'guelphfencing.com' },

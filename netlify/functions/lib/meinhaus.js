@@ -53,6 +53,18 @@ const SITES = {
   // ---- ON since 2026-10-17 (Mark): waterlooheating.ca handed to Meinhaus (unpartnered, voicemail-only) ----
   'waterlooheating.ca':                { enabled: true,  trade: 'Heating & HVAC',             label: 'Waterloo Heating', domain: 'waterlooheating.ca' },
   'Waterloo Heating':                  { enabled: true,  trade: 'Heating & HVAC',             label: 'Waterloo Heating', domain: 'waterlooheating.ca' },
+  // ---- ON since 2026-10-17 (Mark): waterloohandyman.ca handed to Meinhaus (unpartnered) ----
+  'waterloohandyman.ca':               { enabled: true,  trade: 'Handyman',                   label: 'Waterloo Handyman', domain: 'waterloohandyman.ca' },
+  'Waterloo Handyman':                 { enabled: true,  trade: 'Handyman',                   label: 'Waterloo Handyman', domain: 'waterloohandyman.ca' },
+  // ---- ON since 2026-10-17 (Mark): AIS Inc cut from all four gas/appliance sites, handed to Meinhaus ----
+  'guelphgasfitter.com':               { enabled: true,  trade: 'Gas Fitting',                label: 'Guelph Gas Fitter', domain: 'guelphgasfitter.com' },
+  'Guelph Gas Fitter':                 { enabled: true,  trade: 'Gas Fitting',                label: 'Guelph Gas Fitter', domain: 'guelphgasfitter.com' },
+  'guelphfurnaceinstallation.com':     { enabled: true,  trade: 'Furnace Installation',       label: 'Guelph Furnace Installation', domain: 'guelphfurnaceinstallation.com' },
+  'Guelph Furnace Installation':       { enabled: true,  trade: 'Furnace Installation',       label: 'Guelph Furnace Installation', domain: 'guelphfurnaceinstallation.com' },
+  'kwgasfitter.com':                   { enabled: true,  trade: 'Gas Fitting',                label: 'KW Gas Fitter', domain: 'kwgasfitter.com' },
+  'KW Gas Fitter':                     { enabled: true,  trade: 'Gas Fitting',                label: 'KW Gas Fitter', domain: 'kwgasfitter.com' },
+  'kwapplianceinstallation.com':       { enabled: true,  trade: 'Appliance Installation',     label: 'KW Appliance Installation', domain: 'kwapplianceinstallation.com' },
+  'KW Appliance Installation':         { enabled: true,  trade: 'Appliance Installation',     label: 'KW Appliance Installation', domain: 'kwapplianceinstallation.com' },
   // ---- ON since 2026-10-14 (Mark): fencing handed to Meinhaus across all four cities (Mike/Zack passed 2026-10-14) ----
   'guelphfencing.com':                 { enabled: true,  trade: 'Fencing',                   label: 'Guelph Fencing', domain: 'guelphfencing.com' },
   'Guelph Fencing':                    { enabled: true,  trade: 'Fencing',                   label: 'Guelph Fencing', domain: 'guelphfencing.com' },

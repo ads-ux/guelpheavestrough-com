@@ -124,6 +124,8 @@ const SITES = {
   'KWC Interlock & Polymeric Sand':   { enabled: true,  trade: 'Interlocking',              label: 'KWC Interlock & Polymeric Sand', domain: 'kwcpolymericsand.com' },
   'cambridgekitchenrenovation.ca':    { enabled: true,  trade: 'Kitchen Renovation',        label: 'Cambridge Kitchen Renovation', domain: 'cambridgekitchenrenovation.ca' },
   'Cambridge Kitchen Renovation':     { enabled: true,  trade: 'Kitchen Renovation',        label: 'Cambridge Kitchen Renovation', domain: 'cambridgekitchenrenovation.ca' },
+  'cambridgebathroomrenovation.ca':   { enabled: true,  trade: 'Bathroom Renovation',      label: 'Cambridge Bathroom Renovation', domain: 'cambridgebathroomrenovation.ca' },
+  'Cambridge Bathroom Renovation':    { enabled: true,  trade: 'Bathroom Renovation',      label: 'Cambridge Bathroom Renovation', domain: 'cambridgebathroomrenovation.ca' },
   'kitchenerkitchenrenovation.ca':    { enabled: true,  trade: 'Kitchen Renovation',       label: 'Kitchener Kitchen Renovation', domain: 'kitchenerkitchenrenovation.ca' },
   'Kitchener Kitchen Renovation':     { enabled: true,  trade: 'Kitchen Renovation',       label: 'Kitchener Kitchen Renovation', domain: 'kitchenerkitchenrenovation.ca' },
   'kitchenerbathroomrenovation.ca':   { enabled: true,  trade: 'Bathroom Renovation',      label: 'Kitchener Bathroom Renovation', domain: 'kitchenerbathroomrenovation.ca' },

@@ -14,7 +14,8 @@
 //
 // Env vars: MEINHAUS_API_TOKEN (Secret), WPL_RELAY_KEY (Secret), RESEND_API_KEY (opt)
 // ============================================================================
-const { pushLead, auditEmail, siteFor, slug, digits } = require('./lib/meinhaus.js');
+const { pushLead, auditEmail, pausedEmail, hotReasons, siteFor, slug, digits } = require('./lib/meinhaus.js');
+const { getPaused, recordLead } = require('./lib/store.js');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return resp(405, { error: 'POST only' });
@@ -54,7 +55,11 @@ exports.handler = async (event) => {
   lead.ref = lead.ref || `wpl-${slug(site.label)}-${digits(lead.phone) || Date.now()}`;
 
   const dryRun = event.queryStringParameters && event.queryStringParameters.dryrun === '1';
-  const result = await pushLead(lead, { dryRun });
+  const paused = dryRun ? [] : await getPaused(event);
+  const isPaused = paused.indexOf(site.trade) !== -1;
+  const result = isPaused ? { ok: false, skipped: 'trade-paused' } : await pushLead(lead, { dryRun });
+  if (isPaused) await pausedEmail(lead, site);
+  if (!dryRun) await recordLead(event, lead, site, result, !!hotReasons(lead));
   console.log('meinhaus relay', JSON.stringify({ site: site.key, ref: lead.ref, ok: result.ok, status: result.status, skipped: result.skipped, dryRun: !!dryRun, leadId: result.json && result.json.lead && result.json.lead.id, isNewLead: result.json && result.json.isNewLead }));
   if (!dryRun) await auditEmail(lead, result);
   return resp(200, { ok: result.ok, skipped: result.skipped || null, status: result.status || null, leadId: result.json && result.json.lead ? result.json.lead.id : null, isNewLead: result.json ? result.json.isNewLead : null, dryRun: !!dryRun, body: dryRun ? result.body : undefined });

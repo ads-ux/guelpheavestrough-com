@@ -1,0 +1,8 @@
+{
+  "name": "guelpheavestrough-com",
+  "private": true,
+  "description": "Static site + Meinhaus lead relay functions",
+  "dependencies": {
+    "@netlify/blobs": "^8.2.0"
+  }
+}

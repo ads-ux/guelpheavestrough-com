@@ -11,7 +11,8 @@
 //   RESEND_API_KEY       optional — enables the audit email
 //   MAIL_INTERNAL        optional — default mark@weprovideleads.com
 // ============================================================================
-const { pushLead, auditEmail } = require('./lib/meinhaus.js');
+const { pushLead, auditEmail, pausedEmail, hotReasons, siteFor } = require('./lib/meinhaus.js');
+const { getPaused, recordLead } = require('./lib/store.js');
 
 exports.handler = async (event) => {
   let payload;
@@ -47,7 +48,11 @@ exports.handler = async (event) => {
     ref: refOverride || `wpl-${host.replace(/\W+/g, '-')}-form-${payload.id || payload.number || Date.now()}`,
   };
 
-  const result = await pushLead(lead);
+  const site = siteFor(lead.site);
+  const isPaused = !!site && (await getPaused(event)).indexOf(site.trade) !== -1;
+  const result = isPaused ? { ok: false, skipped: 'trade-paused' } : await pushLead(lead);
+  if (isPaused) await pausedEmail(lead, site);
+  if (site) await recordLead(event, lead, site, result, !!hotReasons(lead));
   console.log('meinhaus push', JSON.stringify({ site: host, ref: lead.ref, ok: result.ok, status: result.status, skipped: result.skipped, leadId: result.json && result.json.lead && result.json.lead.id, isNewLead: result.json && result.json.isNewLead }));
   await auditEmail(lead, result);
   return { statusCode: 200, body: JSON.stringify({ ok: result.ok, skipped: result.skipped || null, status: result.status || null }) };

@@ -261,8 +261,26 @@ function clip(s, n) {
 //   lead = { site, source, name, email, phone, address, message, extra: {...},
 //            ref }
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// HOT lead (2026-10-29): address + (photos or a detailed request) + wants it soon.
+// Returns the list of reasons, or null when the lead is not hot.
+// ---------------------------------------------------------------------------
+const URGENT_RE = /\b(asap|a\.s\.a\.p|urgent|urgently|emergency|today|tonight|tomorrow|this week|right away|immediately|leak|leaking|leaks|flood|flooded|flooding|burst|no heat|no hot water|water in (the |my )?basement|fallen|storm damage)\b/i;
+function hotReasons(lead) {
+  const extra = lead.extra || {};
+  const text = [lead.message, ...Object.values(extra)].filter(Boolean).join(' ');
+  const hasAddress = !!(lead.address && String(lead.address).trim().length >= 6);
+  const hasPhotos = Object.entries(extra).some(([k, v]) => /photo|mms|video/i.test(k) && v && String(v).trim());
+  const words = String(lead.message || '').trim().split(/\s+/).filter(Boolean).length;
+  const urgent = URGENT_RE.test(text);
+  if (!hasAddress || !urgent || !(hasPhotos || words >= 15)) return null;
+  return ['address', hasPhotos ? 'photos' : 'detailed request', 'wants it soon'];
+}
+
 function buildPayload(lead, site) {
   const lines = [];
+  const hot = hotReasons(lead);
+  if (hot) lines.push(`*** HOT LEAD: ${hot.join(', ')} ***`);
   lines.push(`[WeProvideLeads] ${site.label} — ${lead.source}`);
   lines.push(`Trade: ${site.trade}`);
   if (lead.message) lines.push('', String(lead.message).trim());
@@ -367,6 +385,24 @@ async function auditEmail(lead, result) {
   } catch (e) { console.log('meinhaus audit email failed', e.message); }
 }
 
+// Trade paused by Meinhaus (2026-10-29): the lead is NOT sent; Mark gets all of it.
+async function pausedEmail(lead, site) {
+  const key = process.env.RESEND_API_KEY || process.env.weprovideleadsnetlify;
+  if (!key) return;
+  const to = (process.env.MAIL_INTERNAL || 'mark@weprovideleads.com').split(',').map(s => s.trim()).filter(Boolean);
+  const from = process.env.MAIL_FROM || 'WeProvideLeads <hello@weprovideleads.com>';
+  const rows = [['Name', lead.name], ['Phone', lead.phone], ['Email', lead.email], ['Address', lead.address], ['Source', lead.source], ['Message', lead.message]]
+    .concat(Object.entries(lead.extra || {}))
+    .filter(([, v]) => v !== undefined && v !== null && String(v).trim() !== '')
+    .map(([k, v]) => `<tr><td style="padding:3px 10px 3px 0;color:#555">${escapeHtml(k)}</td><td>${escapeHtml(v)}</td></tr>`).join('');
+  const html = `<div style="font-family:sans-serif"><h3>${escapeHtml(site.label)}: not sent to Meinhaus</h3>` +
+    `<p>Meinhaus has <b>${escapeHtml(site.trade)}</b> paused, so this lead came to you instead. Sell it elsewhere or forward it by hand.</p><table>${rows}</table></div>`;
+  try {
+    await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from, to, subject: `Paused trade, not sent to Meinhaus: ${site.label} — ${lead.name || lead.phone || lead.email}`, html }) });
+  } catch (e) { console.log('paused email failed', e.message); }
+}
+
 function escapeHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-module.exports = { SITES, siteFor, buildPayload, pushLead, auditEmail, slug, digits, MEINHAUS_ENDPOINT };
+module.exports = { SITES, siteFor, buildPayload, hotReasons, pushLead, auditEmail, pausedEmail, slug, digits, MEINHAUS_ENDPOINT };

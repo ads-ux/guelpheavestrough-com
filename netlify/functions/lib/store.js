@@ -1,24 +1,30 @@
 // ============================================================================
 // Shared state for the Meinhaus relay (Netlify Blobs store "meinhaus").
 //   paused-trades      JSON array of trade names Meinhaus has paused
+//                      (read via the meinhaus-switch status endpoint, which is
+//                       a v2 function with strongly consistent Blobs access)
 //   ledger/YYYY-MM/... one JSON row per lead we push (weekly sheet source)
-// Every helper fails soft: if Blobs is unavailable, leads still flow.
+// Every helper fails soft: if storage is unavailable, leads still flow.
 // Added 2026-10-29.
 // ============================================================================
 const { getStore, connectLambda } = require('@netlify/blobs');
+const STATUS_URL = process.env.MEINHAUS_SWITCH_STATUS_URL || 'https://guelpheavestrough.com/.netlify/functions/meinhaus-switch?status=1';
 
 function store(event) {
   try {
     if (event && event.blobs) connectLambda(event);
-    return getStore({ name: 'meinhaus', consistency: 'strong' });
+    return getStore('meinhaus');
   } catch (e) { console.log('blobs unavailable', e.message); return null; }
 }
 
-async function getPaused(event) {
-  const s = store(event);
-  if (!s) return [];
-  try { const v = await s.get('paused-trades', { type: 'json' }); return Array.isArray(v) ? v : []; }
-  catch (e) { console.log('paused read failed', e.message); return []; }
+async function getPaused() {
+  try {
+    const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 2500);
+    const r = await fetch(STATUS_URL, { signal: ctl.signal, headers: { 'Cache-Control': 'no-cache' } });
+    clearTimeout(t);
+    const j = await r.json();
+    return Array.isArray(j.paused) ? j.paused : [];
+  } catch (e) { console.log('paused read failed', e.message); return []; }
 }
 
 async function recordLead(event, lead, site, result, hot) {

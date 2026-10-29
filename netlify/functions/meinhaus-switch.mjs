@@ -20,14 +20,14 @@ function trades() {
 }
 
 export default async (req) => {
-  const store = getStore('meinhaus');
+  const store = getStore({ name: 'meinhaus', consistency: 'strong' });
   const url = new URL(req.url);
   const paused = (await store.get('paused-trades', { type: 'json' }).catch(() => null)) || [];
 
   if (req.method === 'GET' && url.searchParams.get('status') === '1') {
     const pausedSites = [];
     for (const [k, v] of Object.entries(SITES)) if (v.enabled && paused.includes(v.trade)) pausedSites.push(k);
-    return Response.json({ paused, pausedSites }, { headers: { 'Cache-Control': 'public, max-age=30' } });
+    return Response.json({ paused, pausedSites }, { headers: { 'Cache-Control': 'no-store' } });
   }
 
   const KEY = Netlify.env.get('MEINHAUS_SWITCH_KEY') || '';

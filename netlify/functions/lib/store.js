@@ -10,7 +10,7 @@ const { getStore, connectLambda } = require('@netlify/blobs');
 function store(event) {
   try {
     if (event && event.blobs) connectLambda(event);
-    return getStore('meinhaus');
+    return getStore({ name: 'meinhaus', consistency: 'strong' });
   } catch (e) { console.log('blobs unavailable', e.message); return null; }
 }
 

@@ -55,7 +55,7 @@ exports.handler = async (event) => {
   lead.ref = lead.ref || `wpl-${slug(site.label)}-${digits(lead.phone) || Date.now()}`;
 
   const dryRun = event.queryStringParameters && event.queryStringParameters.dryrun === '1';
-  const paused = dryRun ? [] : await getPaused(event);
+  const paused = await getPaused(event);
   const isPaused = paused.indexOf(site.trade) !== -1;
   const result = isPaused ? { ok: false, skipped: 'trade-paused' } : await pushLead(lead, { dryRun });
   if (isPaused) await pausedEmail(lead, site);

@@ -220,6 +220,8 @@ const SITES = {
   'Cambridge Excavation':              { enabled: true,  trade: 'Excavation',                label: 'Cambridge Excavation', domain: 'cambridgeexcavation.ca' },
   'waterlooexcavation.ca':             { enabled: true,  trade: 'Excavation',                label: 'Waterloo Excavation', domain: 'waterlooexcavation.ca' },
   'Waterloo Excavation':               { enabled: true,  trade: 'Excavation',                label: 'Waterloo Excavation', domain: 'waterlooexcavation.ca' },
+  'kitchenerexcavation.ca':            { enabled: true,  trade: 'Excavation',                label: 'Kitchener Excavation', domain: 'kitchenerexcavation.ca' },
+  'Kitchener Excavation':              { enabled: true,  trade: 'Excavation',                label: 'Kitchener Excavation', domain: 'kitchenerexcavation.ca' },
   'guelphwaterdamage.com':             { enabled: true,  trade: 'Water Damage Restoration',  label: 'Guelph Water Damage', domain: 'guelphwaterdamage.com' },
   'Guelph Water Damage':               { enabled: true,  trade: 'Water Damage Restoration',  label: 'Guelph Water Damage', domain: 'guelphwaterdamage.com' },
   'waterloowaterdamage.ca':            { enabled: true,  trade: 'Water Damage Restoration',  label: 'Waterloo Water Damage Restoration', domain: 'waterloowaterdamage.ca' },

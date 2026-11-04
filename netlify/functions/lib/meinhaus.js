@@ -253,6 +253,18 @@ function digits(s) {
   return String(s || '').replace(/\D/g, '');
 }
 
+// Junk filter for web forms (2026-11-04, Mark): a lead whose phone is not a Canadian
+// number is not pushed. Same area-code list as the Twilio voicemail function. Mark still
+// gets the lead from the site's own Netlify email hook; the ledger shows
+// "not sent: non-canadian-phone". Email-only leads (no phone) are unaffected.
+// Trigger: bot hits 2026-11-03/04 from 315-879-6504 on guelphfencing + guelphappliancerepair.
+const CA_AREA_CODES = new Set('204 226 236 249 250 257 263 289 306 343 354 365 367 368 382 387 403 416 418 428 431 437 438 450 468 474 506 514 519 548 579 581 584 587 604 613 639 647 672 683 705 709 742 753 778 780 782 807 819 825 867 873 879 902 905 942'.split(' '));
+function isCanadianPhone(p) {
+  let d = digits(p);
+  if (d.length === 11 && d[0] === '1') d = d.slice(1);
+  return d.length === 10 && CA_AREA_CODES.has(d.slice(0, 3));
+}
+
 function clip(s, n) {
   s = String(s == null ? '' : s);
   return s.length > n ? s.slice(0, n - 1) + '…' : s;
@@ -326,6 +338,7 @@ async function pushLead(lead, opts = {}) {
 
   const body = buildPayload(lead, site);
   if (!body.email && !body.phone) return { ok: false, skipped: 'no-email-or-phone', body };
+  if (body.phone && !isCanadianPhone(body.phone)) return { ok: false, skipped: 'non-canadian-phone', body };
   if (opts.dryRun) return { ok: true, dryRun: true, body };
 
   const maxAttempts = opts.maxAttempts || 3;
@@ -407,4 +420,4 @@ async function pausedEmail(lead, site) {
 
 function escapeHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-module.exports = { SITES, siteFor, buildPayload, hotReasons, pushLead, auditEmail, pausedEmail, slug, digits, MEINHAUS_ENDPOINT };
+module.exports = { SITES, siteFor, buildPayload, hotReasons, pushLead, auditEmail, pausedEmail, slug, digits, isCanadianPhone, MEINHAUS_ENDPOINT };

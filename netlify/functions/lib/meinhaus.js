@@ -369,7 +369,52 @@ async function pushLead(lead, opts = {}) {
 // Optional audit email to Mark via Resend so every push is searchable in Gmail
 // ("Meinhaus lead #1234"). Silent no-op if no Resend key on the site.
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// A caller who leaves a voicemail and then texts the details hits the same
+// external_ref, so Meinhaus returns the ORIGINAL lead (isNewLead:false) and the
+// richer second payload is discarded. Their API is POST-only, so the record
+// cannot be updated. Instead, mail the extra detail to them tied to the lead id.
+// Deliberately NOT pushed as a second lead: one lead per caller is what keeps
+// the billing count defensible.
+// ---------------------------------------------------------------------------
+async function dupDetailEmail(lead, result) {
+  const to = (process.env.MAIL_MEINHAUS || '').split(',').map(s => s.trim()).filter(Boolean);
+  if (!to.length) return;                                   // unset = feature off
+  const key = process.env.RESEND_API_KEY || process.env.weprovideleadsnetlify;
+  if (!key) return;
+  if (!result || !result.ok || !result.json || !result.json.lead) return;
+  if (result.json.isNewLead !== false) return;              // only on duplicates
+  const body = result.body || {};
+  if (!body.name && !body.address) return;                  // nothing new to add
+
+  const id = result.json.lead.id;
+  const site = siteFor(lead.site) || { label: lead.site };
+  const from = process.env.MAIL_FROM || 'WeProvideLeads <hello@weprovideleads.com>';
+  const cc = (process.env.MAIL_INTERNAL || '').split(',').map(s => s.trim()).filter(Boolean);
+  const rows = [['Name', body.name], ['Phone', body.phone], ['Email', body.email], ['Address', body.address]]
+    .filter(([, v]) => v);
+  const html = '<div style="font-family:sans-serif">' +
+    '<h3>More detail for lead #' + id + ' — ' + escapeHtml(site.label) + '</h3>' +
+    '<p>This customer came back with more information. It is the <b>same lead #' + id +
+    '</b>, not a new one, and it is not counted or billed again.</p>' +
+    '<table cellpadding="4">' +
+    rows.map(([k, v]) => '<tr><td><b>' + k + '</b></td><td>' + escapeHtml(String(v)) + '</td></tr>').join('') +
+    '</table>' +
+    '<pre style="background:#f5f5f5;padding:10px;border-radius:6px;white-space:pre-wrap">' +
+    escapeHtml(body.message || '') + '</pre></div>';
+  const payload = { from, to, subject: 'More detail for Meinhaus lead #' + id + ' — ' + site.label + ' — ' + (body.name || body.phone), html };
+  if (cc.length) payload.cc = cc;
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (e) { console.log('meinhaus dup-detail email failed', e.message); }
+}
+
 async function auditEmail(lead, result) {
+  await dupDetailEmail(lead, result);
   const key = process.env.RESEND_API_KEY || process.env.weprovideleadsnetlify;
   if (!key) return;
   const to = (process.env.MAIL_INTERNAL || 'mark@weprovideleads.com').split(',').map(s => s.trim()).filter(Boolean);
@@ -420,4 +465,4 @@ async function pausedEmail(lead, site) {
 
 function escapeHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-module.exports = { SITES, siteFor, buildPayload, hotReasons, pushLead, auditEmail, pausedEmail, slug, digits, isCanadianPhone, MEINHAUS_ENDPOINT };
+module.exports = { SITES, siteFor, buildPayload, hotReasons, pushLead, auditEmail, dupDetailEmail, pausedEmail, slug, digits, isCanadianPhone, MEINHAUS_ENDPOINT };

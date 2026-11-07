@@ -272,7 +272,9 @@ function isCanadianPhone(p) {
 // 416-855-8223 (2026-11-07, Mark): B2B finance cold-caller, asks for Erik by name, hits the
 // Guelph Eavestrough line most weekdays since Oct 21. Pushed as leads #1443/#1451/#1465/#1467
 // before this; those four are being retracted.
-const BLOCKED_PHONES = new Set(['4786062782', '4168558223']);
+//   6473663881 - "Paul", cold B2B sales, hit Fencing and Tree Service 15 min apart (#1469/#1471).
+//   9057987553 - cold sales dialler on Hydrovac (#1468).
+const BLOCKED_PHONES = new Set(['4786062782', '4168558223', '6473663881', '9057987553']);
 const BLOCKED_EMAIL_DOMAINS = ['automaxrevenue.com'];
 function isBlockedSpammer(lead) {
   let d = digits(lead.phone);

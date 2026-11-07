@@ -3,12 +3,15 @@
 //   GET  ?key=K             the switch page: pause/resume each trade, download the lead sheet
 //   POST key=K&trade=T&action=pause|resume
 //   GET  ?key=K&csv=1&days=N   download the last N days of the lead sheet (default 30)
+//   GET  ?key=K&void=<leadIds>|&voidPhone=<digits>&reason=R[&days=N][&confirm=1]
+//                          mark rows pushed in error so the weekly sheet stops counting them
 import { getStore } from '@netlify/blobs';
 import meinhaus from './lib/meinhaus.js';
 import { rowsBetween, toCsv } from './lib/ledger.mjs';
 
 const { SITES } = meinhaus;
 const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+const norm10 = (p) => { const d = String(p == null ? '' : p).replace(/\D/g, ''); return d.length === 11 && d[0] === '1' ? d.slice(1) : d; };
 
 function trades() {
   const t = {};
@@ -40,6 +43,43 @@ export default async (req) => {
     const days = Math.min(Math.max(parseInt(url.searchParams.get('days') || '30', 10) || 30, 1), 366);
     const rows = await rowsBetween(store, Date.now() - days * 86400000, Date.now());
     return new Response(toCsv(rows), { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="meinhaus-leads-last-${days}-days.csv"` } });
+  }
+
+  // ---- 2026-11-07 void action (Mark): mark ledger rows that were pushed in error, so the
+  // Monday sheet stops counting them. summary() in ledger.mjs counts status === 'sent' only.
+  //   ?key=K&void=1444,1453&reason=junk          by Meinhaus lead id
+  //   ?key=K&voidPhone=4168558223&reason=blocked-caller   every row for one number, duplicates included
+  // Dry run unless &confirm=1. The original row is copied to void-log/<iso>-<leadId> first.
+  if (req.method === 'GET' && (url.searchParams.get('void') || url.searchParams.get('voidPhone'))) {
+    const ids = new Set((url.searchParams.get('void') || '').split(',').map(s => s.trim()).filter(Boolean));
+    const phones = new Set((url.searchParams.get('voidPhone') || '').split(',').map(norm10).filter(Boolean));
+    const reason = ((url.searchParams.get('reason') || 'junk').replace(/[^a-z0-9 -]/gi, '').trim() || 'junk').slice(0, 40);
+    const days = Math.min(Math.max(parseInt(url.searchParams.get('days') || '45', 10) || 45, 1), 366);
+    const confirm = url.searchParams.get('confirm') === '1';
+    const today = new Date().toISOString().slice(0, 10);
+    const months = new Set([new Date().toISOString().slice(0, 7)]);
+    for (let t = Date.now() - days * 86400000; t <= Date.now(); t += 86400000 * 20) months.add(new Date(t).toISOString().slice(0, 7));
+    const hits = [];
+    for (const m of months) {
+      const { blobs } = await store.list({ prefix: 'ledger/' + m + '/' });
+      for (const b of blobs) {
+        const row = await store.get(b.key, { type: 'json' });
+        if (!row || !String(row.status || '').startsWith('sent')) continue;
+        if (!(ids.has(String(row.meinhausLeadId || '')) || phones.has(norm10(row.phone)))) continue;
+        hits.push({ key: b.key, row });
+      }
+    }
+    hits.sort((a, b) => (a.row.date < b.row.date ? -1 : 1));
+    if (confirm) {
+      for (const h of hits) {
+        await store.setJSON('void-log/' + new Date().toISOString() + '-' + (h.row.meinhausLeadId || 'x'), h.row);
+        await store.setJSON(h.key, Object.assign({}, h.row, { status: 'void: ' + reason + ' (pushed as #' + (h.row.meinhausLeadId || '?') + ' - not billable, retracted ' + today + ')' }));
+      }
+    }
+    return Response.json({
+      confirmed: confirm, reason, matched: hits.length,
+      rows: hits.map(h => ({ leadId: h.row.meinhausLeadId, site: h.row.site, who: h.row.name || h.row.phone, date: h.row.date, newLead: h.row.newLead, was: h.row.status })),
+    }, { headers: { 'Cache-Control': 'no-store' } });
   }
 
   let note = '';

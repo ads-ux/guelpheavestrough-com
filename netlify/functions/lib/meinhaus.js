@@ -269,7 +269,10 @@ function isCanadianPhone(p) {
 // they switch to a Canadian number. AutoMaxRevenue ("Heath Carson", "Richard Baker",
 // "Brady Randall", "Brandon Lewis", "Carl Osborne") hit 5 sites Nov 4-7 from one number.
 // Mark still gets the submission email; the ledger shows "not sent: blocked-spammer".
-const BLOCKED_PHONES = new Set(['4786062782']);
+// 416-855-8223 (2026-11-07, Mark): B2B finance cold-caller, asks for Erik by name, hits the
+// Guelph Eavestrough line most weekdays since Oct 21. Pushed as leads #1443/#1451/#1465/#1467
+// before this; those four are being retracted.
+const BLOCKED_PHONES = new Set(['4786062782', '4168558223']);
 const BLOCKED_EMAIL_DOMAINS = ['automaxrevenue.com'];
 function isBlockedSpammer(lead) {
   let d = digits(lead.phone);

@@ -265,6 +265,20 @@ function isCanadianPhone(p) {
   return d.length === 10 && CA_AREA_CODES.has(d.slice(0, 3));
 }
 
+// Spam blocklist (2026-11-07, Mark): known spammers never reach Meinhaus, even if
+// they switch to a Canadian number. AutoMaxRevenue ("Heath Carson", "Richard Baker",
+// "Brady Randall", "Brandon Lewis", "Carl Osborne") hit 5 sites Nov 4-7 from one number.
+// Mark still gets the submission email; the ledger shows "not sent: blocked-spammer".
+const BLOCKED_PHONES = new Set(['4786062782']);
+const BLOCKED_EMAIL_DOMAINS = ['automaxrevenue.com'];
+function isBlockedSpammer(lead) {
+  let d = digits(lead.phone);
+  if (d.length === 11 && d[0] === '1') d = d.slice(1);
+  if (d && BLOCKED_PHONES.has(d)) return true;
+  const hay = [lead.email, lead.message, ...Object.values(lead.extra || {})].join(' ').toLowerCase();
+  return BLOCKED_EMAIL_DOMAINS.some(dom => hay.includes(dom));
+}
+
 function clip(s, n) {
   s = String(s == null ? '' : s);
   return s.length > n ? s.slice(0, n - 1) + '…' : s;
@@ -336,6 +350,7 @@ async function pushLead(lead, opts = {}) {
   if (!site.enabled && !opts.force) return { ok: false, skipped: 'site-disabled', site: site.key };
   if (!token) return { ok: false, skipped: 'no-token' };
 
+  if (isBlockedSpammer(lead)) return { ok: false, skipped: 'blocked-spammer' };
   const body = buildPayload(lead, site);
   if (!body.email && !body.phone) return { ok: false, skipped: 'no-email-or-phone', body };
   if (body.phone && !isCanadianPhone(body.phone)) return { ok: false, skipped: 'non-canadian-phone', body };
@@ -465,4 +480,4 @@ async function pausedEmail(lead, site) {
 
 function escapeHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-module.exports = { SITES, siteFor, buildPayload, hotReasons, pushLead, auditEmail, dupDetailEmail, pausedEmail, slug, digits, isCanadianPhone, MEINHAUS_ENDPOINT };
+module.exports = { SITES, siteFor, buildPayload, hotReasons, pushLead, auditEmail, dupDetailEmail, pausedEmail, slug, digits, isCanadianPhone, isBlockedSpammer, MEINHAUS_ENDPOINT };

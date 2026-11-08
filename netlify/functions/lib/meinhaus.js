@@ -284,6 +284,39 @@ function isBlockedSpammer(lead) {
   return BLOCKED_EMAIL_DOMAINS.some(dom => hay.includes(dom));
 }
 
+// ---------------------------------------------------------------------------
+// Email-side junk check (2026-11-08, Mark). The non-Canadian filter only looks at
+// the phone, so a submission with NO phone and a throwaway email walked straight in
+// as lead #1494 ("Flood Test", lashondagerrie21170+s884679rytewy@hotmail.com, no phone).
+// This runs ONLY when there is no phone at all, so a real lead that gives a number is
+// never touched. Mark still gets the Netlify submission email either way.
+// ---------------------------------------------------------------------------
+const DISPOSABLE_EMAIL_DOMAINS = [
+  'mailinator.com', 'guerrillamail.com', 'sharklasers.com', '10minutemail.com',
+  'tempmail.com', 'temp-mail.org', 'throwawaymail.com', 'yopmail.com', 'getnada.com',
+  'trashmail.com', 'dispostable.com', 'maildrop.cc', 'fakeinbox.com', 'mohmal.com',
+  'emailinbox.top', 'luz.emailinbox.top', 'mailnesia.com', 'spam4.me', 'tempr.email',
+];
+function junkEmailReason(email, lead) {
+  const e = String(email || '').trim().toLowerCase();
+  if (!e) return null;
+  const at = e.lastIndexOf('@');
+  if (at < 1) return 'junk-email';
+  const local = e.slice(0, at), domain = e.slice(at + 1);
+  if (DISPOSABLE_EMAIL_DOMAINS.some(d => domain === d || domain.endsWith('.' + d))) return 'disposable-email';
+  // A plus tag that is long and mixes letters and digits is a generated throwaway.
+  // Short, human plus tags (alex+quotes@, jo+2026@) are left alone.
+  const plus = local.indexOf('+');
+  if (plus !== -1) {
+    const tag = local.slice(plus + 1);
+    if (tag.length >= 8 && /[a-z]/.test(tag) && /\d/.test(tag)) return 'generated-email-alias';
+  }
+  // Obvious test submissions, but only with no phone to call back on.
+  const hay = [lead && lead.name, lead && lead.message].filter(Boolean).join(' ');
+  if (/(^|\W)(test|testing)(\W|$)/i.test(hay)) return 'test-submission';
+  return null;
+}
+
 function clip(s, n) {
   s = String(s == null ? '' : s);
   return s.length > n ? s.slice(0, n - 1) + '…' : s;
@@ -359,6 +392,10 @@ async function pushLead(lead, opts = {}) {
   const body = buildPayload(lead, site);
   if (!body.email && !body.phone) return { ok: false, skipped: 'no-email-or-phone', body };
   if (body.phone && !isCanadianPhone(body.phone)) return { ok: false, skipped: 'non-canadian-phone', body };
+  if (!body.phone) {
+    const r = junkEmailReason(body.email, lead);
+    if (r) return { ok: false, skipped: r, body };
+  }
   if (opts.dryRun) return { ok: true, dryRun: true, body };
 
   const maxAttempts = opts.maxAttempts || 3;
@@ -485,4 +522,5 @@ async function pausedEmail(lead, site) {
 
 function escapeHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-module.exports = { SITES, siteFor, buildPayload, hotReasons, pushLead, auditEmail, dupDetailEmail, pausedEmail, slug, digits, isCanadianPhone, isBlockedSpammer, MEINHAUS_ENDPOINT };
+module.exports = {
+  junkEmailReason, SITES, siteFor, buildPayload, hotReasons, pushLead, auditEmail, dupDetailEmail, pausedEmail, slug, digits, isCanadianPhone, isBlockedSpammer, MEINHAUS_ENDPOINT };

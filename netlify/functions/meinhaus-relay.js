@@ -76,7 +76,9 @@ exports.handler = async (event) => {
   // On a hit we do NOT create a second lead; the new detail is mailed against the
   // lead that already exists, which is what dupDetailEmail() is for.
   let prior = null;
-  if (!isPaused && !dryRun) {
+  // Evaluated on dry runs too, so the guard is testable without creating a lead.
+  // Only the memo and index WRITES are gated on !dryRun, further down.
+  if (!isPaused) {
     const memoKey = slug(site.label) + '|' + (phone10(lead.phone) || String(lead.email || '').toLowerCase());
     const memo = seen().get(memoKey);
     if (memo && Date.now() - memo.at < 15 * 60000) prior = { leadId: memo.leadId, date: new Date(memo.at).toISOString(), days: 0, via: 'memo' };
@@ -89,7 +91,7 @@ exports.handler = async (event) => {
   let result;
   if (prior) {
     console.log('meinhaus dedupe', site.label, 'matches lead', prior.leadId, 'via', prior.via, prior.days.toFixed(2) + 'd old');
-    result = { ok: true, dedupedLocally: true, priorLeadId: prior.leadId, json: { lead: { id: prior.leadId }, isNewLead: false }, body: buildPayload(lead, site) };
+    result = { ok: true, dedupedLocally: true, dryRun: !!dryRun, priorLeadId: prior.leadId, json: { lead: { id: prior.leadId }, isNewLead: false }, body: buildPayload(lead, site) };
   } else {
     result = isPaused ? { ok: false, skipped: 'trade-paused' } : await pushLead(lead, { dryRun });
   }
@@ -102,7 +104,7 @@ exports.handler = async (event) => {
   if (!dryRun) await recordLead(event, lead, site, result, !!hotReasons(lead));
   console.log('meinhaus relay', JSON.stringify({ site: site.key, ref: lead.ref, ok: result.ok, status: result.status, skipped: result.skipped, dryRun: !!dryRun, deduped: !!result.dedupedLocally, leadId: result.json && result.json.lead && result.json.lead.id, isNewLead: result.json && result.json.isNewLead }));
   if (!dryRun) await auditEmail(lead, result);
-  return resp(200, { ok: result.ok, deduped: !!result.dedupedLocally, skipped: result.skipped || null, status: result.status || null, leadId: result.json && result.json.lead ? result.json.lead.id : null, isNewLead: result.json ? result.json.isNewLead : null, dryRun: !!dryRun, body: dryRun ? result.body : undefined });
+  return resp(200, { ok: result.ok, deduped: !!result.dedupedLocally, dedupeOf: result.priorLeadId || null, skipped: result.skipped || null, status: result.status || null, leadId: result.json && result.json.lead ? result.json.lead.id : null, isNewLead: result.json ? result.json.isNewLead : null, dryRun: !!dryRun, body: dryRun ? result.body : undefined });
 };
 
 function fileUrls(v) {

@@ -89,6 +89,9 @@ const SITES = {
   // ---- ON since 2026-10-17 (Mark): waterloohandyman.ca handed to Meinhaus (unpartnered) ----
   'waterloohandyman.ca':               { enabled: true,  trade: 'Handyman',                   label: 'Waterloo Handyman', domain: 'waterloohandyman.ca' },
   'Waterloo Handyman':                 { enabled: true,  trade: 'Handyman',                   label: 'Waterloo Handyman', domain: 'waterloohandyman.ca' },
+  // ---- ON since 2026-11-09 (Mark): handymancambridge.com handed to Meinhaus (was unwired, voicemail-only) ----
+  'handymancambridge.com':             { enabled: true,  trade: 'Handyman',                   label: 'Handyman Cambridge', domain: 'handymancambridge.com' },
+  'Handyman Cambridge':                { enabled: true,  trade: 'Handyman',                   label: 'Handyman Cambridge', domain: 'handymancambridge.com' },
   // ---- ON since 2026-10-17 (Mark): AIS Inc cut from all four gas/appliance sites, handed to Meinhaus ----
   'guelphgasfitter.com':               { enabled: true,  trade: 'Gas Fitting',                label: 'Guelph Gas Fitter', domain: 'guelphgasfitter.com' },
   'Guelph Gas Fitter':                 { enabled: true,  trade: 'Gas Fitting',                label: 'Guelph Gas Fitter', domain: 'guelphgasfitter.com' },

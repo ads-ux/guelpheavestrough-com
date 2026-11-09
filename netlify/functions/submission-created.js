@@ -11,8 +11,11 @@
 //   RESEND_API_KEY       optional — enables the audit email
 //   MAIL_INTERNAL        optional — default mark@weprovideleads.com
 // ============================================================================
-const { pushLead, auditEmail, pausedEmail, hotReasons, siteFor } = require('./lib/meinhaus.js');
-const { getPaused, recordLead } = require('./lib/store.js');
+const { pushLead, auditEmail, pausedEmail, hotReasons, siteFor, buildPayload, slug } = require('./lib/meinhaus.js');
+const { getPaused, recordLead, recentLead, rememberContact } = require('./lib/store.js');
+
+const phone10 = (p) => { const d = String(p == null ? '' : p).replace(/\D/g, ''); return d.length === 11 && d[0] === '1' ? d.slice(1) : d; };
+const seen = () => { const g = (typeof globalThis !== 'undefined' ? globalThis : global); return (g.__mhSeen = g.__mhSeen || new Map()); };
 
 exports.handler = async (event) => {
   let payload;
@@ -50,10 +53,38 @@ exports.handler = async (event) => {
 
   const site = siteFor(lead.site);
   const isPaused = !!site && (await getPaused(event)).indexOf(site.trade) !== -1;
-  const result = isPaused ? { ok: false, skipped: 'trade-paused' } : await pushLead(lead);
+
+  // ---- Duplicate guard (2026-11-09), same rules as meinhaus-relay.js. A form ref
+  // carries the Netlify submission id, so every re-submit is unique by design: that
+  // is how one person became leads #1495 and #1496 thirteen hours apart. Matching is
+  // therefore on the CONTACT, not the ref. Skipped when a test ref is forced, since
+  // that replay is deliberate. Fails open.
+  let prior = null;
+  if (site && !isPaused && !refOverride) {
+    const memoKey = slug(site.label) + '|' + (phone10(lead.phone) || String(lead.email || '').toLowerCase());
+    const memo = seen().get(memoKey);
+    if (memo && Date.now() - memo.at < 15 * 60000) prior = { leadId: memo.leadId, days: 0, via: 'memo' };
+    if (!prior) {
+      const r = await recentLead(event, site, lead);
+      if (r) prior = Object.assign({ via: 'ledger' }, r);
+    }
+  }
+
+  let result;
+  if (prior) {
+    console.log('meinhaus dedupe', site.label, 'matches lead', prior.leadId, 'via', prior.via, prior.days.toFixed(2) + 'd old');
+    result = { ok: true, dedupedLocally: true, priorLeadId: prior.leadId, json: { lead: { id: prior.leadId }, isNewLead: false }, body: buildPayload(lead, site) };
+  } else {
+    result = isPaused ? { ok: false, skipped: 'trade-paused' } : await pushLead(lead);
+  }
   if (isPaused) await pausedEmail(lead, site);
+  if (site && !prior && result.ok && result.json && result.json.lead) {
+    const id = result.json.lead.id;
+    seen().set(slug(site.label) + '|' + (phone10(lead.phone) || String(lead.email || '').toLowerCase()), { leadId: id, at: Date.now() });
+    await rememberContact(event, site, lead, id);
+  }
   if (site) await recordLead(event, lead, site, result, !!hotReasons(lead));
-  console.log('meinhaus push', JSON.stringify({ site: host, ref: lead.ref, ok: result.ok, status: result.status, skipped: result.skipped, leadId: result.json && result.json.lead && result.json.lead.id, isNewLead: result.json && result.json.isNewLead }));
+  console.log('meinhaus push', JSON.stringify({ site: host, ref: lead.ref, ok: result.ok, deduped: !!result.dedupedLocally, status: result.status, skipped: result.skipped, leadId: result.json && result.json.lead && result.json.lead.id, isNewLead: result.json && result.json.isNewLead }));
   await auditEmail(lead, result);
   return { statusCode: 200, body: JSON.stringify({ ok: result.ok, skipped: result.skipped || null, status: result.status || null }) };
 };

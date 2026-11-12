@@ -268,6 +268,26 @@ function isCanadianPhone(p) {
   return d.length === 10 && CA_AREA_CODES.has(d.slice(0, 3));
 }
 
+// Structurally impossible phone numbers (2026-11-11, Mark). The area-code list above only
+// checks the first three digits, so a bot that picks a real Canadian area code and a fake
+// exchange sails straight through. 555 is reserved for fiction and can never be a live
+// number; an exchange beginning 0 or 1 is invalid under the North American plan; a number
+// whose last seven digits are all the same digit is a placeholder, not a phone.
+// Pushed to Meinhaus before this filter existed: #1497 (Donald Moore, 416-555-2562, 8 Nov)
+// and #1510 ("Matthew Anderson", 416-555-1880, 11 Nov). Both voided.
+// NOTE: this also stops our own 555 test leads from reaching Meinhaus, which is wanted -
+// use ?dryrun=1 to exercise the pipe instead of creating a lead in their account.
+function fakePhoneReason(p) {
+  let d = digits(p);
+  if (d.length === 11 && d[0] === '1') d = d.slice(1);
+  if (d.length !== 10) return null;
+  const nxx = d.slice(3, 6);
+  if (nxx === '555') return 'reserved-555-number';
+  if (nxx[0] === '0' || nxx[0] === '1') return 'impossible-phone';
+  if (/^(\d)\1{6}$/.test(d.slice(3))) return 'placeholder-phone';
+  return null;
+}
+
 // Spam blocklist (2026-11-07, Mark): known spammers never reach Meinhaus, even if
 // they switch to a Canadian number. AutoMaxRevenue ("Heath Carson", "Richard Baker",
 // "Brady Randall", "Brandon Lewis", "Carl Osborne") hit 5 sites Nov 4-7 from one number.
@@ -395,6 +415,10 @@ async function pushLead(lead, opts = {}) {
   const body = buildPayload(lead, site);
   if (!body.email && !body.phone) return { ok: false, skipped: 'no-email-or-phone', body };
   if (body.phone && !isCanadianPhone(body.phone)) return { ok: false, skipped: 'non-canadian-phone', body };
+  if (body.phone) {
+    const fake = fakePhoneReason(body.phone);
+    if (fake) return { ok: false, skipped: fake, body };
+  }
   if (!body.phone) {
     const r = junkEmailReason(body.email, lead);
     if (r) return { ok: false, skipped: r, body };
@@ -526,4 +550,4 @@ async function pausedEmail(lead, site) {
 function escapeHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
 module.exports = {
-  junkEmailReason, SITES, siteFor, buildPayload, hotReasons, pushLead, auditEmail, dupDetailEmail, pausedEmail, slug, digits, isCanadianPhone, isBlockedSpammer, MEINHAUS_ENDPOINT };
+  junkEmailReason, fakePhoneReason, SITES, siteFor, buildPayload, hotReasons, pushLead, auditEmail, dupDetailEmail, pausedEmail, slug, digits, isCanadianPhone, isBlockedSpammer, MEINHAUS_ENDPOINT };

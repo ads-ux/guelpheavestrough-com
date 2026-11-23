@@ -210,6 +210,10 @@ const SITES = {
   'KWC Power Washing':                 { enabled: true,  trade: 'Power Washing',             label: 'KWC Power Washing', domain: 'kwcpowerwashing.com' },
   'tricitypowerwashing.com':           { enabled: true,  trade: 'Power Washing',             label: 'Tri-City Power Washing', domain: 'tricitypowerwashing.com' },
   'Tri-City Power Washing':            { enabled: true,  trade: 'Power Washing',             label: 'Tri-City Power Washing', domain: 'tricitypowerwashing.com' },
+  // ---- 2026-11-23 (Mark): Logan / CBM Exterior cut; Tri-City roof & gutter line + Guelph-KW Soft Washing moved to Meinhaus ----
+  'Tri-City Roof & Gutter Cleaning':   { enabled: true,  trade: 'Power Washing',             label: 'Tri-City Roof & Gutter Cleaning', domain: 'tricitypowerwashing.com' },
+  'guelphkwpowerwashing.com':          { enabled: true,  trade: 'Power Washing',             label: 'Guelph-KW Soft Washing', domain: 'guelphkwpowerwashing.com' },
+  'Guelph-KW Soft Washing':            { enabled: true,  trade: 'Power Washing',             label: 'Guelph-KW Soft Washing', domain: 'guelphkwpowerwashing.com' },
   'guelphdrivewaysealing.ca':          { enabled: true,  trade: 'Driveway Sealing',          label: 'Guelph Driveway Sealing', domain: 'guelphdrivewaysealing.ca' },
   'Guelph Driveway Sealing':           { enabled: true,  trade: 'Driveway Sealing',          label: 'Guelph Driveway Sealing', domain: 'guelphdrivewaysealing.ca' },
   'kwcdrivewaysealing.com':            { enabled: true,  trade: 'Driveway Sealing',          label: 'KWC Driveway Sealing', domain: 'kwcdrivewaysealing.com' },

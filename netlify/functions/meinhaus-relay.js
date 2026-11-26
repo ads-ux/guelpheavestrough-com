@@ -28,7 +28,35 @@ const phone10 = (p) => { const d = String(p == null ? '' : p).replace(/\D/g, '')
 // Blobs index is readable, so a warm container also remembers what it just sent.
 const seen = () => { const g = (typeof globalThis !== 'undefined' ? globalThis : global); return (g.__mhSeen = g.__mhSeen || new Map()); };
 
+// 2026-11-26: never answer a Netlify form hook with 5xx. Netlify retries a failing hook 6 times and then DISABLES it
+// silently (cambridgewaterproofing.ca, Nov 2026). Any crash below returns 200 and emails Mark the raw lead instead.
 exports.handler = async (event) => {
+  try { return await relayInner(event); }
+  catch (e) {
+    console.log('meinhaus relay CRASH', e && e.stack);
+    await crashEmail(event, e);
+    return resp(200, { ok: false, crashed: true });
+  }
+};
+
+async function crashEmail(event, err) {
+  try {
+    const key = process.env.RESEND_API_KEY || process.env.weprovideleadsnetlify; if (!key) return;
+    const to = (process.env.MAIL_INTERNAL || 'mark@weprovideleads.com').split(',').map(s => s.trim()).filter(Boolean);
+    let raw = String(event && event.body || ''); let d = {};
+    try { const j = JSON.parse(raw); d = j.data || j; } catch (_) {}
+    const esc = (x) => String(x == null ? '' : x).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+    const who = [d.name, d.phone || d.tel, d.email].filter(Boolean).join(' / ');
+    const html = '<p><strong>meinhaus-relay crashed. This lead did NOT reach Meinhaus.</strong> Forward it by hand.</p>' +
+      '<p>' + esc(who || 'no contact fields') + '</p><p>' + esc(d.message || d.details || '') + '</p>' +
+      '<p style="color:#888">Error: ' + esc(err && err.message) + '</p><pre style="font-size:11px;white-space:pre-wrap">' + esc(raw.slice(0, 4000)) + '</pre>';
+    const ac = new AbortController(); setTimeout(() => ac.abort(), 2500);
+    await fetch('https://api.resend.com/emails', { method: 'POST', signal: ac.signal, headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: process.env.MAIL_FROM || 'WeProvideLeads <hello@weprovideleads.com>', to, subject: 'MEINHAUS RELAY CRASHED: lead not delivered' + (who ? ' — ' + who : ''), html }) });
+  } catch (e) { console.log('crash email failed', e && e.message); }
+}
+
+async function relayInner(event) {
   if (event.httpMethod !== 'POST') return resp(405, { error: 'POST only' });
 
   const expected = process.env.WPL_RELAY_KEY || '';
@@ -105,7 +133,7 @@ exports.handler = async (event) => {
   console.log('meinhaus relay', JSON.stringify({ site: site.key, ref: lead.ref, ok: result.ok, status: result.status, skipped: result.skipped, dryRun: !!dryRun, deduped: !!result.dedupedLocally, leadId: result.json && result.json.lead && result.json.lead.id, isNewLead: result.json && result.json.isNewLead }));
   if (!dryRun) await auditEmail(lead, result);
   return resp(200, { ok: result.ok, deduped: !!result.dedupedLocally, dedupeOf: result.priorLeadId || null, skipped: result.skipped || null, status: result.status || null, leadId: result.json && result.json.lead ? result.json.lead.id : null, isNewLead: result.json ? result.json.isNewLead : null, dryRun: !!dryRun, body: dryRun ? result.body : undefined });
-};
+}
 
 function fileUrls(v) {
   if (!v) return undefined;

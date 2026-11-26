@@ -433,10 +433,18 @@ async function pushLead(lead, opts = {}) {
   if (opts.dryRun) return { ok: true, dryRun: true, body };
 
   const maxAttempts = opts.maxAttempts || 3;
+  // 2026-11-26: hard time budget. Netlify kills a function at 10s and answers the form hook with 502; enough of
+  // those and Netlify silently DISABLES the hook. Keep all attempts + backoff inside ~6.5s so the handler always
+  // gets to record, audit-email Mark, and return 200.
+  const started = Date.now(); const BUDGET = opts.budgetMs || 6500;
   let last = null;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const left = BUDGET - (Date.now() - started);
+    if (left < 600) { last = last || { ok: false, status: 0, error: 'time budget exhausted', attempts: attempt - 1, body }; break; }
+    const ac = new AbortController(); const tmr = setTimeout(() => ac.abort(), Math.min(3000, left));
     try {
       const res = await fetch(MEINHAUS_ENDPOINT, {
+        signal: ac.signal,
         method: 'POST',
         headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(body),
@@ -449,9 +457,9 @@ async function pushLead(lead, opts = {}) {
       if ([400, 401, 403, 422].includes(res.status)) return last;
       // 429 / 5xx -> back off and retry
     } catch (e) {
-      last = { ok: false, status: 0, error: e.message, attempts: attempt, body };
-    }
-    if (attempt < maxAttempts) await new Promise(r => setTimeout(r, 1500 * attempt));
+      last = { ok: false, status: 0, error: e.name === 'AbortError' ? 'timeout' : e.message, attempts: attempt, body };
+    } finally { clearTimeout(tmr); }
+    if (attempt < maxAttempts) await new Promise(r => setTimeout(r, Math.min(1000 * attempt, Math.max(0, BUDGET - (Date.now() - started) - 600))));
   }
   return last;
 }
